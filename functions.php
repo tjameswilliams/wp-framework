@@ -9,6 +9,13 @@ namespace fw;
 
 spl_autoload_register('fw\autoload_classes');
 
+/**
+ * fw\autoload_classes function
+ *
+ * Allows classes to be included without explicitly writing an include for each class file each time a class is required.
+ * @return void
+ * @author Tim Williams
+ */
 function autoload_classes( $class_name ) 
 {
 	if( file_exists( TEMPLATEPATH . '/classes/' . $class_name . '.class.php' ) )
@@ -20,7 +27,13 @@ function autoload_classes( $class_name )
 // --> parses the .env file for environment conditionals
 new \environment();
 
-// --> required scripts
+/**
+ * fw\scripts function
+ * 
+ * Handles enqueueing all theme required scripts, also handles minifying the JavaScript in live environments
+ * @return void
+ * @author Tim Williams
+ */
 function scripts()
 {
 	$theme_uri = get_template_directory_uri();
@@ -125,10 +138,19 @@ function scripts()
 
 add_action('init', 'fw\scripts');
 
+/**
+ * fw\admin_classes function
+ *
+ * Instantiates classes which handle hooks for custom admin functionality. If a class is required for the theme initiation
+ * it should be registered here. Please note, be smart about how you register classes, if they are only needed to print
+ * the admin pages register them under the is_admin() clause.
+ * @return void
+ * @author Tim Williams
+ */
 function admin_classes() {
 	if( is_admin() )
 	{
-		$admin_classes = array('ajax');
+		$admin_classes = array('ajax','pageMeta');
 		
 		foreach( $admin_classes as $admin_class )
 		{
@@ -149,6 +171,13 @@ function admin_classes() {
 
 add_action('init', 'fw\admin_classes');
 
+/**
+ * fw\styles function
+ *
+ * Registers theme styles.
+ * @return void
+ * @author Tim Williams
+ */
 function styles()
 {
 	wp_register_style('bootstrap', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css', array(), '1.0', 'all');
@@ -167,6 +196,13 @@ add_action( 'after_setup_theme', function() {
 	register_nav_menu( 'header-menu', 'Primary Menu' );
 });
 
+/**
+ * fw\nav function
+ * 
+ * prints a bootstrap compatible nav bar.
+ * @return string
+ * @author Tim Williams
+ */
 function nav()
 {
 	wp_nav_menu(
@@ -192,7 +228,21 @@ function nav()
 	
 }
 
-
-
-/* GENERAL PURPOSE AJAX */
-
+/**
+ * fw\load_view function
+ *
+ * @param  String  $template
+ * @param  Array  $data
+ * 
+ * It is best practice to separate view code from processing logic. Use this helper function to easily load
+ * and parse php based views instead of writing inline HTML within admin functions.
+ * @return String, parsed HTML template
+ * @author Tim Williams
+ */
+function load_view( $template, $data = array() )
+{
+	ob_start();
+	extract( $data );
+	include __DIR__ . '/views/' . $template . '.tpl';
+	return ob_get_clean();
+}

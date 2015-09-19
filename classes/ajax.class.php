@@ -9,12 +9,12 @@
  */
 class ajax
 {
-	// --> property set when input headers are '
+	// --> stores angular POST input
 	private $json_input;
 	
 	function __construct() {
 		
-		$data = json_decode(file_get_contents("php://input"), true);
+		$this->json_input = json_decode(file_get_contents("php://input"), true);
 		
 		foreach( get_class_methods( $this ) as $method ) {
 			if( stristr($method, '_admin_ajax') ) {
