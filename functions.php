@@ -115,16 +115,18 @@ function scripts()
 		if( !file_exists($min_js_loc) || isset($_GET['dumpcache']) ) {
 			$minifier = new \minifier();
 			$script_min = '';
-			foreach( $scripts as $script ) {
-				$script_parse = file_get_contents(__DIR__.$script['location']);
-				if( stristr($script['location'],'.min.') !== false ) {
-					$script_min .= $script_parse;
-				}
-				else
-				{
-					$script_parse = $minifier->minify($script_parse);
-					if( $script_parse !== false ) {
-						$script_min .= "\n\n".$script_parse;
+			foreach( $scripts as $name => $script ) {
+				if( !isset($script['no_concat']) || $script['no_concat'] == false ) {
+					$script_parse = file_get_contents(__DIR__.$script['location']);
+					if( stristr($script['location'],'.min.') !== false ) {
+						$script_min .=  "\n\n".$script_parse;
+					}
+					else
+					{
+						$script_parse = $minifier->minify($script_parse,array('flaggedComments' => false));
+						if( $script_parse !== false ) {
+							$script_min .= "\n\n".$script_parse;
+						}
 					}
 				}
 			}
@@ -133,6 +135,13 @@ function scripts()
 		$cache_time = filectime($min_js_loc);
 		wp_register_script('minified_javascript', $theme_uri.'/cache/scripts.min.js?cb='.$cache_time, array('jquery'), '1');
 		wp_enqueue_script('minified_javascript');
+		
+		foreach( $scripts as $name => $script ) {
+			if( isset($script['no_concat']) && $script['no_concat'] ) {
+				wp_register_script($name, $theme_uri.$script['location'], $script['dependencies'], '1');
+				wp_enqueue_script($name);
+			}
+		}
 	}
 }
 
