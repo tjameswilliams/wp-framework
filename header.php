@@ -12,7 +12,7 @@
 	<!-- Meta -->
 	<meta name="viewport" content="width=device-width,initial-scale=1.0">
 	<meta name="description" content="<?php bloginfo('description'); ?>">
-	<link rel="shortcut icon" href="<?php echo get_template_directory_uri(); ?>/img/kwp_logo.png">
+	<link rel="shortcut icon" href="<?php echo get_template_directory_uri(); ?>/favicon.ico">
 		
 	<!-- CSS + jQuery + JavaScript -->
 	<?php wp_head(); ?>
