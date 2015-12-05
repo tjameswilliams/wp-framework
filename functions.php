@@ -180,6 +180,14 @@ function admin_classes() {
 
 add_action('init', 'fw\admin_classes');
 
+function admin_scripts()
+{
+	wp_register_script('admin_js',  get_template_directory_uri().'/js/admin.js', array('jquery'), '1');
+	wp_enqueue_script('admin_js');
+}
+
+add_action('init', 'fw\admin_classes');
+
 /**
  * fw\styles function
  *
