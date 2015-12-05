@@ -186,7 +186,7 @@ function admin_scripts()
 	wp_enqueue_script('admin_js');
 }
 
-add_action('init', 'fw\admin_classes');
+add_action( 'admin_enqueue_scripts', 'fw\admin_scripts' );
 
 /**
  * fw\styles function
