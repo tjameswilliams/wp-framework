@@ -69,4 +69,10 @@ class ajax
 		echo json_encode($movefile);
 		die;
 	}
+	
+	function save_meta_admin_ajax() {
+		$data = json_decode(file_get_contents("php://input"), true);
+		echo json_encode(array('success' =>update_post_meta($data['post_id'],$data['meta_key'],$data['meta_value']) ));
+		die;
+	}
 }
