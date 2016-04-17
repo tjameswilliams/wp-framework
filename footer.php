@@ -1,4 +1,4 @@
-	
+	</md-content>
 	
 	
 	<!-- Google Analytics && Facebook && global jQuery -->

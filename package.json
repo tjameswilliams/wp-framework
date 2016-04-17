@@ -1,39 +1,52 @@
 {
-	"name": "wp_theme_framework",
-	"version": "1.0.0",
-	"description": "WordPress / Angular theme framework",
-	"main": "none",
-	"dependencies": {},
-	"devDependencies": {
-		"angular":"latest",
-		"angular-bootstrap":"latest",
-		"angular-route":"latest",
-		"angular-touch":"latest",
-		"angular-ui-bootstrap":"latest",
-		"angular-ui-sortable":"latest",
-		"angular-ui-tinymce":"latest",
-		"bootstrap":"latest",
-		"fancybox":"latest",
-		"ng-file-upload":"latest",
-		"tinymce":"latest"
-	},
-	"scripts": {
-		"test": "test"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/tjameswilliams/wp-framework.git"
-	},
-	"keywords": [
-		"WordPress",
-		"Framework",
-		"Angular"
-	],
-	"author": "Tim Williams",
-	"license": "ISC",
-	"bugs": {
-		"url": "https://github.com/tjameswilliams/wp-framework/issues"
-	},
-	"homepage": "https://github.com/tjameswilliams/wp-framework#readme"
+  "name": "wp_theme_framework",
+  "version": "1.0.0",
+  "description": "WordPress / Angular theme framework",
+  "main": "none",
+  "dependencies": {
+    "angular-animate": "^1.5.3",
+    "angular-aria": "^1.5.3",
+    "angular-material": "^1.0.7",
+    "angular-messages": "^1.5.3",
+    "gulp": "^3.9.1",
+    "gulp-clean-css": "^2.0.6",
+    "gulp-concat": "^2.6.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.2.0",
+    "gulp-uglify": "^1.5.3",
+    "jquery": "^2.2.3",
+    "material-design-icons": "^2.2.3",
+    "merge-stream": "^1.0.0"
+  },
+  "devDependencies": {
+    "angular": "latest",
+    "angular-bootstrap": "latest",
+    "angular-route": "latest",
+    "angular-touch": "latest",
+    "angular-ui-bootstrap": "latest",
+    "angular-ui-sortable": "latest",
+    "angular-ui-tinymce": "latest",
+    "bootstrap": "latest",
+    "fancybox": "latest",
+    "ng-file-upload": "latest",
+    "tinymce": "latest"
+  },
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tjameswilliams/wp-framework.git"
+  },
+  "keywords": [
+    "WordPress",
+    "Framework",
+    "Angular"
+  ],
+  "author": "Tim Williams",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tjameswilliams/wp-framework/issues"
+  },
+  "homepage": "https://github.com/tjameswilliams/wp-framework#readme"
 }
-
