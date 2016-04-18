@@ -16,7 +16,7 @@ all JavaScript dependencies so that libraries are easy to find and uniformly inc
 * Create your WordPress database on your development machine.
 * Open a terminal window and run these commands changing the variables to your setup preferences 
 ```Bash
-$ cd /yourtheme/wp-content/themes
+$ cd /{{your theme}}/wp-content/themes
 $ git clone https://github.com/tjameswilliams/wp-framework.git
 $ cd wp-framework && npm install && gulp init_theme --option db='{{your database name}}' --option user='{{your database user}}' --option pass='{{your database password}}' --option host='{{your database host}}' --option apache_hostname='{{your virtual host name}}'
 $ gulp watch
