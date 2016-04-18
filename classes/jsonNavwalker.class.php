@@ -1,15 +1,16 @@
 <?
 /**
- * Class Name: wp_bootstrap_navwalker
- * GitHub URI: https://github.com/twittem/wp-bootstrap-navwalker
- * Description: A custom WordPress nav walker class to implement the Bootstrap 3 navigation style in a custom theme using the WordPress built in menu manager.
- * Version: 2.0.4
- * Author: Edward McIntyre - @twittem
- * License: GPL-2.0+
- * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
+ * jsonNavwalker class
+ *
+ * I seriously disagree with WordPress' propensity to build HTML within classes using string concatenation
+ * This may make it easier for developers not familiar with working with recursive data, however, if one
+ * was to want to modify that HTML, doing it this way would be extreemely difficult. This class simply json encodes
+ * the menu objects so they can be consumed by a view or API request or whatever.
+ * @package wp-framework
+ * @author Tim Williams
  */
 
-class wp_bootstrap_navwalker extends Walker_Nav_Menu {
+class jsonNavwalker extends Walker_Nav_Menu {
 
   
   // Displays start of a level. E.g '<ul>'

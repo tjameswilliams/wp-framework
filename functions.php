@@ -132,10 +132,10 @@ function nav()
 		'theme_location'  => 'header-menu',
 		'container'		  => false, 
 		'echo'			  => false,
-		'fallback_cb'	  => 'wp_bootstrap_navwalker::fallback',
+		'fallback_cb'	  => 'jsonNavwalker::fallback',
 		'items_wrap'	  => '[%3$s]',
 		'depth'			  => 2,
-		'walker'		  => new \wp_bootstrap_navwalker()
+		'walker'		  => new \jsonNavwalker()
 		)
 	);
   if( $menu_ob = json_decode(str_replace('}{', '},{',$menu_str),true)) {
