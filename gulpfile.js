@@ -8,6 +8,8 @@ var cleanCSS = require('gulp-clean-css');
 var sass = require('gulp-sass');
 var fs = require('fs');
 var merge = require('merge-stream');
+var browserSync = require('browser-sync').create();
+var reload      = browserSync.reload;
 
 gulp.task('minify_js', function() {
   var jsDeps = JSON.parse(fs.readFileSync('dependencies.json')).js;
@@ -37,12 +39,59 @@ gulp.task('minify_css', function() {
 });
 
 gulp.task('watch', function () {
-  gulp.watch(['src/**/*.scss','src/**/*.css'], ['minify_css']);
-  gulp.watch('src/js/*.js', ['minify_js']);
+  
+  if( fs.existsSync('env.dev.json') ) {
+    var devEnv = JSON.parse(fs.readFileSync('env.dev.json'));
+    browserSync.init(devEnv);
+    gulp.watch([
+      __dirname+"/compiled/all.min.css",
+      __dirname+"/compiled/all.min.js",
+      __dirname+"/*.php",
+      __dirname+"/**/*.php"
+    ]).on("change", reload);
+  }
+  
+  gulp.watch([
+    __dirname+"/src/**/*.scss",
+    __dirname+'/src/**/*.css'
+  ], ['minify_css']);
+  
+  gulp.watch(__dirname+'/src/js/*.js', ['minify_js']);
+  
+  
 });
 
-// init a theme using this pattern "gulp init_theme --option db='wp_theme_fw' --option user='wp_theme_fw' --option pass='password' --option host='localhost'"
+// init a theme using this pattern "gulp init_theme --option db='wp_theme_fw' --option user='wp_theme_fw' --option pass='password' --option host='localhost' --option apache_hostname='local.wp_theme_framework.com'"
 gulp.task('init_theme', function() {
+  
+  
+  var opts = {
+    'db':'',
+    'user':'',
+    'pass':'',
+    'host':'localhost',
+    'unique_keys':'',
+    'apache_hostname':''
+  };
+
+  // get options and assign them to variables
+  process.argv.forEach(function(opt) {
+    Object.keys(opts).forEach(function(optRef) {
+      if( opt.indexOf(optRef+'=') !== -1 ) {
+        opts[optRef] = opt.replace(optRef+'=','');
+      }
+    });
+  });
+  
+  if( opts.apache_hostname != '' ) {
+    fs.readFile(__dirname+'/node_templates/env.dev.tpl', 'utf8', function (err,envTpl) {
+      envTpl = envTpl.replace(/{{apache_hostname}}/gi,opts.apache_hostname);
+      fs.writeFile('env.dev.json',envTpl,function(err) {
+        if(err) throw err;
+        console.log('BrowserSync options file created! @ env.dev.json');
+      });
+    });
+  }
   
   // --> create the storage directory
   var storageDir = __dirname+'/../../../storage';
@@ -53,7 +102,7 @@ gulp.task('init_theme', function() {
       if(err) throw err;
       fs.writeFile(storageDir+'/.env','ENVIRONMENT="local"',function(err) {
         if(err) throw err;
-        console.log('Storage directory created!');
+        console.log('Storage directory created! @ /storage');
       });
     });
   } else {
@@ -63,25 +112,7 @@ gulp.task('init_theme', function() {
   // --> setup the wp_config file
   var configFile = __dirname+'/../../../wp-config.php';
   if(!fs.existsSync(configFile)) {
-    
     var https = require('https');
-    
-    var opts = {
-      'db':'',
-      'user':'',
-      'pass':'',
-      'host':'localhost',
-      'unique_keys':''
-    };
-  
-    // get options and assign them to variables
-    process.argv.forEach(function(opt) {
-      Object.keys(opts).forEach(function(optRef) {
-        if( opt.indexOf(optRef+'=') !== -1 ) {
-          opts[optRef] = opt.replace(optRef+'=','');
-        }
-      });
-    });
     
     fs.readFile(__dirname+'/node_templates/wp-config.tpl', 'utf8', function (err,configTpl) {
       if (err) throw err;
@@ -102,7 +133,7 @@ gulp.task('init_theme', function() {
           // --> write the config file
           fs.writeFile(configFile,configTpl,function(err) {
             if(err) throw err;
-            console.log('Config file created!');
+            console.log('Config file created! @ wp-config.php');
           });
         });
       });

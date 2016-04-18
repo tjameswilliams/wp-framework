@@ -8,6 +8,7 @@
     "angular-aria": "^1.5.3",
     "angular-material": "^1.0.7",
     "angular-messages": "^1.5.3",
+    "browser-sync": "^2.12.3",
     "gulp": "^3.9.1",
     "gulp-clean-css": "^2.0.6",
     "gulp-concat": "^2.6.0",
