@@ -1,4 +1,7 @@
 <?php
+$protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === true ? 'https://' : 'http://';
+define('WP_HOME', $protocol.$_SERVER['HTTP_HOST']);
+define('WP_SITEURL', $protocol.$_SERVER['HTTP_HOST']);
 /**
  * The base configuration for WordPress
  *
