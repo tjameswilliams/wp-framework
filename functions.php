@@ -16,7 +16,7 @@ spl_autoload_register('fw\autoload_classes');
  * @return void
  * @author Tim Williams
  */
-function autoload_classes( $class_name ) 
+function autoload_classes( $class_name )
 {
 	if( file_exists( TEMPLATEPATH . '/classes/' . $class_name . '.class.php' ) )
 	{
@@ -29,7 +29,7 @@ new \environment();
 
 /**
  * fw\scripts function
- * 
+ *
  * Handles enqueueing all theme required scripts, also handles minifying the JavaScript in live environments
  * @return void
  * @author Tim Williams
@@ -37,12 +37,12 @@ new \environment();
 function scripts()
 {
 	$theme_uri = get_template_directory_uri();
-	
+
   // --> Javascript is now processed with gulp. During development run 'gulp watch' in the theme directory
-  
+
 	wp_register_script('minified_javascript', $theme_uri.'/compiled/all.min.js', [], filemtime(TEMPLATEPATH.'/compiled/all.min.js'));
 	wp_enqueue_script('minified_javascript');
-  
+
 }
 
 add_action('init', 'fw\scripts');
@@ -60,21 +60,21 @@ function admin_classes() {
 	if( is_admin() )
 	{
 		$admin_classes = array('ajax','pageMeta');
-		
+
 		foreach( $admin_classes as $admin_class )
 		{
 			new $admin_class();
 		}
 	}
 	else {
-		
+
 		$fe_classes = array('customShortcodes','ajax');
-		
-		foreach( $fe_classes as $class ) 
+
+		foreach( $fe_classes as $class )
 		{
 			new $class();
 		}
-		
+
 	}
 }
 
@@ -83,12 +83,21 @@ add_action('init', 'fw\admin_classes');
 function admin_scripts()
 {
   $deps = json_decode(file_get_contents(TEMPLATEPATH.'/dependencies.json'),true);
-  if( !empty($deps['admin']) && !empty($deps['admin']['js'])) {
-    foreach($deps['admin']['js'] as $script) {
-    	wp_register_script($script,  get_template_directory_uri().'/'.$script, array('jquery'), filemtime(TEMPLATEPATH.'/'.$script));
-    	wp_enqueue_script($script);
-    }
-  }
+	if( !empty($deps['admin']) ) {
+		if( !empty($deps['admin']['js'])) {
+	    foreach($deps['admin']['js'] as $script) {
+	    	wp_register_script($script,  get_template_directory_uri().'/'.$script, array('jquery'), filemtime(TEMPLATEPATH.'/'.$script));
+	    	wp_enqueue_script($script);
+	    }
+	  }
+		if( !empty($deps['admin']['css'])) {
+	    foreach($deps['admin']['css'] as $style) {
+	    	wp_register_style($style,  get_template_directory_uri().'/'.$style, false, filemtime(TEMPLATEPATH.'/'.$script));
+	    	wp_enqueue_style($style);
+	    }
+	  }
+	}
+
 }
 
 add_action( 'admin_enqueue_scripts', 'fw\admin_scripts' );
@@ -120,7 +129,7 @@ add_action( 'after_setup_theme', function() {
 
 /**
  * fw\nav function
- * 
+ *
  * prints a bootstrap compatible nav bar.
  * @return string
  * @author Tim Williams
@@ -130,7 +139,7 @@ function nav()
 	$menu_str = wp_nav_menu(
 	array(
 		'theme_location'  => 'header-menu',
-		'container'		  => false, 
+		'container'		  => false,
 		'echo'			  => false,
 		'fallback_cb'	  => 'jsonNavwalker::fallback',
 		'items_wrap'	  => '[%3$s]',
@@ -167,7 +176,7 @@ function buildTree(array $elements, $parentId = 0) {
  *
  * @param  String  $template
  * @param  Array  $data
- * 
+ *
  * It is best practice to separate view code from processing logic. Use this helper function to easily load
  * and parse php based views instead of writing inline HTML within admin functions.
  * @return String, parsed HTML template
