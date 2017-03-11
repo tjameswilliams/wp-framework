@@ -22,24 +22,24 @@ gulp.task('minify_js', function() {
 
 gulp.task('minify_css', function() {
   var deps = JSON.parse(fs.readFileSync('dependencies.json'));
-  
+
   var cssStream = gulp.src(deps.css)
     .pipe(cleanCSS({compatibility: 'ie8'}));
-  
+
   var scssStream = gulp.src(deps.scss)
     .pipe(sass().on('error', sass.logError));
-    
-  
+
+
   var mergedStreams = merge(cssStream,scssStream)
     .pipe(concat('all.css'))
     .pipe(rename({ extname: '.min.css' }))
     .pipe(gulp.dest('compiled/'))
-  
+
     return mergedStreams;
 });
 
 gulp.task('watch', function () {
-  
+
   if( fs.existsSync('env.dev.json') ) {
     var devEnv = JSON.parse(fs.readFileSync('env.dev.json'));
     browserSync.init(devEnv);
@@ -50,21 +50,21 @@ gulp.task('watch', function () {
       __dirname+"/**/*.php"
     ]).on("change", reload);
   }
-  
+
   gulp.watch([
     __dirname+"/src/**/*.scss",
     __dirname+'/src/**/*.css'
   ], ['minify_css']);
-  
+
   gulp.watch(__dirname+'/src/js/*.js', ['minify_js']);
-  
-  
+
+
 });
 
-// init a theme using this pattern "gulp init_theme --option db='wp_theme_fw' --option user='wp_theme_fw' --option pass='password' --option host='localhost' --option apache_hostname='local.wp_theme_framework.com'"
+// init a theme using this pattern "gulp init_theme --option db='wp_theme_fw' --option user='wp_theme_fw' --option pass='password' --option host='localhost' --option apache_hostname='local.wp_theme_framework.com'" --option theme_name="themename"
 gulp.task('init_theme', function() {
-  
-  
+
+
   var opts = {
     'db':'',
     'user':'',
@@ -82,7 +82,7 @@ gulp.task('init_theme', function() {
       }
     });
   });
-  
+
   if( opts.apache_hostname != '' ) {
     fs.readFile(__dirname+'/node_templates/env.dev.tpl', 'utf8', function (err,envTpl) {
       envTpl = envTpl.replace(/{{apache_hostname}}/gi,opts.apache_hostname);
@@ -92,9 +92,21 @@ gulp.task('init_theme', function() {
       });
     });
   }
-  
+
+  var baseDir = __dirname+'/../../../';
+  if( opts.theme_name != '' && opts.apache_hostname != '' ) {
+    fs.readFile(__dirname+'/node_templates/wpcli.tpl', 'utf8', function (err,envTpl) {
+      envTpl = envTpl.replace(/{{theme_name}}/gi,opts.theme_name);
+      envTpl = envTpl.replace(/{{apache_hostname}}/gi,opts.apache_hostname);
+      fs.writeFile(baseDir+'wpcli',envTpl,function(err) {
+        if(err) throw err;
+        console.log('wpcli script created!');
+      });
+    });
+  }
+
   // --> create the storage directory
-  var storageDir = __dirname+'/../../../storage';
+  var storageDir = baseDir+'/storage';
   if (!fs.existsSync(storageDir)){
     fs.mkdirSync(storageDir);
     // --> create the deny access .htaccess file
@@ -108,12 +120,12 @@ gulp.task('init_theme', function() {
   } else {
     console.log('Storage directory already exists');
   }
-  
+
   // --> setup the wp_config file
   var configFile = __dirname+'/../../../wp-config.php';
   if(!fs.existsSync(configFile)) {
     var https = require('https');
-    
+
     fs.readFile(__dirname+'/node_templates/wp-config.tpl', 'utf8', function (err,configTpl) {
       if (err) throw err;
       // --> get fresh keys from WP api.
@@ -124,12 +136,12 @@ gulp.task('init_theme', function() {
         });
         response.on('end', function() {
           opts.unique_keys = body;
-          
+
           // --> loop through variables and replace them in the template then write them to the config file
           Object.keys(opts).forEach(function(optRef) {
             configTpl = configTpl.replace('{{'+optRef+'}}',opts[optRef]);
           });
-          
+
           // --> write the config file
           fs.writeFile(configFile,configTpl,function(err) {
             if(err) throw err;
@@ -138,11 +150,11 @@ gulp.task('init_theme', function() {
         });
       });
     });
-    
+
   } else {
     console.log('wp-config.php already exists');
   }
-  
+
 });
 
 gulp.task('default', ['minify_js','minify_css']);
