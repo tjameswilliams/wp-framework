@@ -42,7 +42,7 @@ class exampleModel extends dbHelper {
     $this->testUpdate($title.' -- updated');
     $ret[] = $this->testSelect();
     $this->removeTable();
-    return $select;
+    return $ret;
   }
 
 
