@@ -71,7 +71,8 @@ gulp.task('init_theme', function() {
     'pass':'',
     'host':'localhost',
     'unique_keys':'',
-    'apache_hostname':''
+    'apache_hostname':'',
+    'theme_name':''
   };
 
   // get options and assign them to variables
