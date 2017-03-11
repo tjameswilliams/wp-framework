@@ -11,7 +11,8 @@ $_SERVER = array(
 //require the WP bootstrap
 require_once(dirname(__FILE__).'/wp-load.php');
 
-require_once __DIR__.'/wp-content/themes/{{theme_name}}/'.$argv[1].'.class.php';
+require_once __DIR__.'/wp-content/themes/{{theme_name}}/classes/'.$argv[1].'.class.php';
+
 
 $mod = new $argv[1]();
 var_dump(call_user_func_array( array($mod, $argv[2]), array_slice($argv,3) ));
