@@ -15,6 +15,7 @@ class exampleModel extends dbHelper {
         PRIMARY KEY (`ID`)
       ) ENGINE=MyISAM AUTO_INCREMENT=59 DEFAULT CHARSET=latin1;",
     'testInsert' => "INSERT INTO cli_test (title,number) VALUES (%s,%d)",
+    'testUpdate' => "INSERT INTO cli_test (title) VALUES (%s) ON DUPLICATE KEY UPDATE title=VALUES(title)",
     'testSelect' => "SELECT * FROM cli_test",
     'removeTable' => "DROP TABLE cli_test"
   ];
@@ -35,7 +36,11 @@ class exampleModel extends dbHelper {
   function test($title,$number) {
     $this->createTable();
     $this->testInsert($title,$number);
-    $select = $this->testSelect();
+    $ret = [];
+    $ret[] = $this->testSelect();
+    sleep(1);
+    $this->testUpdate($title.' -- updated');
+    $ret[] = $this->testSelect();
     $this->removeTable();
     return $select;
   }
